@@ -1,7 +1,7 @@
 # Games Engine 1 - Assignment
 
 ## Ideas
-1) Air dancers, and they dances for music.  
+1) Air dancers, and they dances to the music.  
    Inspired by:  
    [![YouTube](http://img.youtube.com/vi/IlIEGAx3vFI/0.jpg)](https://www.youtube.com/watch?v=IlIEGAx3vFI)
 
