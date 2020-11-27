@@ -74,6 +74,7 @@ public class PlayerBuilder : MonoBehaviour
         }
     };
 
+    // define state flags
     public bool destroyed = false;
     public bool ready = false;
 

@@ -31,8 +31,8 @@ public class FleetBuilder : MonoBehaviour
     public bool ready = false;
     
     // define fleet dimentions
-    public int fleetWidth = 11;
-    public int fleetDepth = 5;
+    public int fleetWidth = 5;
+    public int fleetDepth = 3;
 
     // define how alien saucers are located in the fleet
     public int[] fleetHeight = {SAUCER_BIG, SAUCER_BIG, SAUCER_MEDIUM, SAUCER_MEDIUM, SAUCER_SMALL};
@@ -120,7 +120,7 @@ public class FleetBuilder : MonoBehaviour
     void Start()
     {
         // before start alien fleet, choose rotation as random angle around Y axis
-        transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-100,101), 0, Random.Range(-100,101)), transform.up);
+        //transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-100,101), 0, Random.Range(-100,101)), transform.up);
 
         // generate fleet using co-routine
         StartCoroutine(BuildFleet());
