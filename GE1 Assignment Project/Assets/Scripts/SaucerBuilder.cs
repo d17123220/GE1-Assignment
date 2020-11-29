@@ -192,10 +192,7 @@ public class SaucerBuilder : MonoBehaviour
         }
     };
 
-
-
-
-    // defin state flags
+    // define state flags
     public bool destroyed = false;
     public bool initialFigure = true;
 
@@ -213,8 +210,6 @@ public class SaucerBuilder : MonoBehaviour
         
         return new Vector3(X,Y,Z);
     }
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -245,9 +240,6 @@ public class SaucerBuilder : MonoBehaviour
                 break;
         }
         
-        //var blueprint = blueprintSmall;
-
-
         for (int i=0; i<blueprint.GetLength(0); i++)
         {
             for (int j=0; j<blueprint.GetLength(1); j++)
@@ -284,8 +276,6 @@ public class SaucerBuilder : MonoBehaviour
                 }
             }
         }
-
-
 
     }
 

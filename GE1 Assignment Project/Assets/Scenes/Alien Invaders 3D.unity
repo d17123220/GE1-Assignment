@@ -292,7 +292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166941901}
   m_LocalRotation: {x: 0.01745245, y: 0, z: 0, w: 0.99984777}
-  m_LocalPosition: {x: 0, y: 132, z: -109}
+  m_LocalPosition: {x: 0, y: 8, z: -109}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1156,6 +1156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1909430864}
   - component: {fileID: 1909430865}
+  - component: {fileID: 1909430866}
   m_Layer: 0
   m_Name: PlayerTower
   m_TagString: Untagged
@@ -1194,6 +1195,19 @@ MonoBehaviour:
   moveSpeed: 5
   destroyed: 0
   ready: 0
+--- !u!114 &1909430866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909430863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ed3cd82aa936e4584a6eaceb3021a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVelocity: 50
 --- !u!1 &2036465679
 GameObject:
   m_ObjectHideFlags: 0
