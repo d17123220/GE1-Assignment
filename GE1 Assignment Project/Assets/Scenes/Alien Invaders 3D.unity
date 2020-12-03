@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 166941904}
   - component: {fileID: 166941903}
   - component: {fileID: 166941902}
+  - component: {fileID: 166941905}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -298,6 +299,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 2, y: 0, z: 0}
+--- !u!114 &166941905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166941901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab3b64f28e30b046aa59c892d4742d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInCinematicMove: 0
+  isInFreeMove: 1
+  isInTower: 0
+  canShoot: 0
+  playerTower: {fileID: 0}
+  alienFleet: {fileID: 0}
+  lookSpeed: 150
+  moveSpeed: 75
+  currAngle: 0
+  limitAngle: 0
 --- !u!1 &367311445
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,7 +842,7 @@ MonoBehaviour:
   depthSpacer: 6
   moveSpeed: 3
   ready: 0
-  fleetWidth: 11
+  fleetWidth: 5
   fleetDepth: 1
   fleetHeight: 0200000002000000010000000100000000000000
 --- !u!1 &1075312150

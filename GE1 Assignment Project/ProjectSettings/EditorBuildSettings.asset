@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Alien Invaders 3D.unity
+    guid: d4784aa58246b1e44ad80e8d771fce7c
   m_configObjects: {}
