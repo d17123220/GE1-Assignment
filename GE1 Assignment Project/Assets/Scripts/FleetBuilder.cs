@@ -34,6 +34,9 @@ public class FleetBuilder : MonoBehaviour
     public int fleetWidth = 5;
     public int fleetDepth = 3;
 
+    // define camera to move it to player's tower
+    public GameObject mainCamera;
+
     // define how alien saucers are located in the fleet
     public int[] fleetHeight = {SAUCER_BIG, SAUCER_BIG, SAUCER_MEDIUM, SAUCER_MEDIUM, SAUCER_SMALL};
 
@@ -111,6 +114,11 @@ public class FleetBuilder : MonoBehaviour
             i++;
         }
         ready = true;
+
+        yield return new WaitForSeconds(5);
+
+        mainCamera.GetComponent<CameraBind>().MoveToTower();
+
     }
 
 

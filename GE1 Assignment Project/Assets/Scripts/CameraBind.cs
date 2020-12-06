@@ -9,21 +9,26 @@ public class CameraBind : MonoBehaviour
     public bool isInFreeMove = true;
     public bool isInTower = false;
     public bool canShoot = false;
+    public bool ready = false;
 
     // define points to look at
-    public Transform playerTower;
-    public Transform alienFleet;
+    public GameObject playerTower;
+    public GameObject alienFleet;
 
     // define speed for movement
     public float lookSpeed = 150.0f;
     public float moveSpeed = 50.0f;
 
-    // define main camera to use for movement
-    private GameObject mainCamera;
-    
-    public float currAngle;
-    public float limitAngle;
-    
+    // Move camera to tower
+    public void MoveToTower()
+    {
+        if (isInFreeMove)
+        {
+            isInFreeMove = false;
+            isInCinematicMove = true;
+        }
+    }
+
     // move camera forward or backward (without rotation)
     void Walk(float units)
     {
@@ -59,14 +64,11 @@ public class CameraBind : MonoBehaviour
         // get cos between vector.up and vertical angle of camera
         float verticalAngle = Vector3.Dot(transform.forward, Vector3.up);
         
-        currAngle = verticalAngle;
-        limitAngle = Mathf.Cos((90-limitUp) * Mathf.Deg2Rad);
-
-        Debug.Log(angle);
-
         // limit rotation to limitDown and limitUp
         if ( (angle > 0 && verticalAngle <= Mathf.Cos((90-limitDown) * Mathf.Deg2Rad)) || (angle < 0 && verticalAngle >= Mathf.Cos((90-limitUp) * Mathf.Deg2Rad)) )
         {
+            //Debug.Log(verticalAngle);
+            //Debug.Log(Mathf.Cos((90-limitDown) * Mathf.Deg2Rad));
             // do nothing
             return;
         }
@@ -81,8 +83,6 @@ public class CameraBind : MonoBehaviour
     {
         // remove cursor
         Cursor.visible = false;
-        // add current main camera as mainCamera
-        //mainCamera = Camera.main.gameObject;        
     }
 
     // Update is called once per frame
@@ -98,15 +98,48 @@ public class CameraBind : MonoBehaviour
         // quit by pressing Esc
         if (Input.GetKey(KeyCode.Escape))
         {
+            Cursor.visible = true;
             Application.Quit();
         }
 
         // if moving to player's tower
         if (isInCinematicMove)
         {
-            // show cinematic LEARP from one point to another
-            
+            Transform moveTo = playerTower.transform;
+            Transform lookAt;
 
+            // check where to look
+            var distance = Vector3.Distance(transform.position,moveTo.position);
+            if (distance > 0.8)
+            {
+                lookAt = moveTo;
+            }
+            else
+            {
+                lookAt = alienFleet.transform;
+            }
+
+            // calculate if looking straight at target
+            Vector3 direction = lookAt.position - transform.position;
+            Quaternion rotateTo = Quaternion.LookRotation(direction);
+            
+            // if distance below and looking at a fleet
+            if (distance < 0.05 && rotateTo[1] < 0.05 && rotateTo[2] < 0.05)
+            {
+                isInCinematicMove = false;
+                ready = true;
+                // if alien fleet and player's tower are ready - set camera into tower mode 
+                if (alienFleet.GetComponent<FleetBuilder>().ready && playerTower.GetComponent<PlayerBuilder>().ready)
+                    isInTower = true;
+            }
+            // otherwise move and look
+            else
+            {
+                // slowly look at target
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotateTo, lookSpeed / 30 * Time.deltaTime);
+                // show cinematic LEARP from one point to another
+                transform.position = Vector3.Lerp(transform.position, moveTo.position, moveSpeed / 30 * Time.deltaTime);
+            }
         }
         // otherwise either free move or tower management
         else if (isInFreeMove)
@@ -127,22 +160,21 @@ public class CameraBind : MonoBehaviour
                 flyDirection = -1;
             Climb(flyDirection * moveSpeed * Time.deltaTime);
 
+            if (Input.GetKey(KeyCode.Space))
+                MoveToTower();
+
         }
         // otherwise if in tower
         else if (isInTower)
         {
             // look around using mouse
             Yaw(mouseX * lookSpeed * Time.deltaTime);
-            Pitch(-mouseY * lookSpeed * Time.deltaTime, 0.0f);
+            Pitch(-mouseY * lookSpeed * Time.deltaTime, -10.0f);
 
             if (canShoot && Input.GetButton("Fire1"))
             {
 
             }
-
         }
-
-
-        
     }
 }

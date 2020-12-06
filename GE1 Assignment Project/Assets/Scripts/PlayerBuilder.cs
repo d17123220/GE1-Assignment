@@ -13,7 +13,8 @@ public class PlayerBuilder : MonoBehaviour
     public float prefabsize = 1.0f;
 
     // define initial movement speed in bricks per second
-    public float moveSpeed = 5;
+    public float moveSpeed = 20;
+    public float rotateSpeed = 50;
 
     // Blueprint of player's tower. 3-d model build of cubes, 6x7x11
     public int[,,] blueprint = new int[,,]
@@ -67,7 +68,7 @@ public class PlayerBuilder : MonoBehaviour
             {0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,1,1,1,0,0,0,0},
-            {0,0,0,0,1,1,1,0,0,0,0},
+            {0,0,0,0,1,0,1,0,0,0,0},
             {0,0,0,0,1,1,1,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0}
@@ -78,22 +79,23 @@ public class PlayerBuilder : MonoBehaviour
     public bool destroyed = false;
     public bool ready = false;
 
+    // define camera object to drag around
+    public GameObject mainCamera;
+
     private Vector3 CalculateRelativePosition(int i, int j, int k)
     {
         // vertical coordinate Y - One cube down + another cube for each additional i 
         float fullY = blueprint.GetLength(0);
-        float Y = (float) (-0.5 - fullY + i) * prefabsize ; 
+        float Y = (float) (0.5 - fullY + i) * prefabsize ; 
         // forward coordinate Z
         float halfZ = blueprint.GetLength(2) / 2;
-        float Z = (float) ((-1) * halfZ + k + 0.5) * prefabsize;
+        float Z = (float) ((-1) * halfZ + k ) * prefabsize;
         // horizontal coordinate X
         float halfX = blueprint.GetLength(1) / 2;
-        float X = (float) ((-1) * halfX + j + 0.5) * prefabsize;
+        float X = (float) ((-1) * halfX + j ) * prefabsize;
         
         return new Vector3(X,Y,Z);
     }
-
-
 
     // Coroutine to build player's tower
     System.Collections.IEnumerator BuildTower()
@@ -138,7 +140,22 @@ public class PlayerBuilder : MonoBehaviour
         ready = true;
     }
 
+    // move whole tower forward or backward
+    private void Move(float units)
+    {
+        // take tower's current position, and move forward or backward based on current rotation
+        transform.position += transform.forward * units;
+        // drag camera to the same point
+        mainCamera.transform.position = transform.position;
+    }
 
+    // rotate whole tower around vertical axis
+    private void Rotate(float angle)
+    {
+        // create rotation quaternion around vertical axis
+        Quaternion rotate = Quaternion.AngleAxis(angle, Vector3.up);
+        transform.rotation = rotate * transform.rotation;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -152,7 +169,17 @@ public class PlayerBuilder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // use controls to move tower around
+        // use controls to move tower around - only if playr is in tower
+        if (mainCamera.GetComponent<CameraBind>().isInTower)
+        {
+            float move, rotate;
+            move = Input.GetAxis("Vertical");
+            rotate = Input.GetAxis("Horizontal");
 
+            Move(move * moveSpeed * Time.deltaTime);
+            Rotate(rotate * rotateSpeed * Time.deltaTime);
+
+
+        }
     }
 }
