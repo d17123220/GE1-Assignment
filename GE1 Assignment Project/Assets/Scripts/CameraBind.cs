@@ -8,7 +8,6 @@ public class CameraBind : MonoBehaviour
     public bool isInCinematicMove = false;
     public bool isInFreeMove = true;
     public bool isInTower = false;
-    public bool canShoot = false;
     public bool ready = false;
 
     // define points to look at
@@ -18,6 +17,9 @@ public class CameraBind : MonoBehaviour
     // define speed for movement
     public float lookSpeed = 150.0f;
     public float moveSpeed = 50.0f;
+
+    // define crosshair texture
+    public Texture2D crosshairImage;
 
     // Move camera to tower
     public void MoveToTower()
@@ -67,8 +69,6 @@ public class CameraBind : MonoBehaviour
         // limit rotation to limitDown and limitUp
         if ( (angle > 0 && verticalAngle <= Mathf.Cos((90-limitDown) * Mathf.Deg2Rad)) || (angle < 0 && verticalAngle >= Mathf.Cos((90-limitUp) * Mathf.Deg2Rad)) )
         {
-            //Debug.Log(verticalAngle);
-            //Debug.Log(Mathf.Cos((90-limitDown) * Mathf.Deg2Rad));
             // do nothing
             return;
         }
@@ -83,6 +83,18 @@ public class CameraBind : MonoBehaviour
     {
         // remove cursor
         Cursor.visible = false;
+    }
+
+    // Draw various things on camera's GUI
+    void OnGUI()
+    {
+        float textureSize = Screen.height / 10;
+        float xMin = (Screen.width / 2) - (textureSize / 2);
+        float yMin = (Screen.height / 2) - (textureSize / 2);
+        
+        // if in tower - draw crosshair
+        if (isInTower)
+            GUI.DrawTexture(new Rect(xMin, yMin, textureSize, textureSize), crosshairImage);
     }
 
     // Update is called once per frame
@@ -130,7 +142,11 @@ public class CameraBind : MonoBehaviour
                 ready = true;
                 // if alien fleet and player's tower are ready - set camera into tower mode 
                 if (alienFleet.GetComponent<FleetBuilder>().ready && playerTower.GetComponent<PlayerBuilder>().ready)
+                {
+                    // enable shooting
+                    gameObject.GetComponent<PlayerShooting>().canShoot = true;
                     isInTower = true;
+                }
             }
             // otherwise move and look
             else
@@ -171,10 +187,6 @@ public class CameraBind : MonoBehaviour
             Yaw(mouseX * lookSpeed * Time.deltaTime);
             Pitch(-mouseY * lookSpeed * Time.deltaTime, -10.0f);
 
-            if (canShoot && Input.GetButton("Fire1"))
-            {
-
-            }
         }
     }
 }

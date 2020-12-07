@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 166941903}
   - component: {fileID: 166941902}
   - component: {fileID: 166941905}
+  - component: {fileID: 166941906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -314,12 +315,26 @@ MonoBehaviour:
   isInCinematicMove: 0
   isInFreeMove: 1
   isInTower: 0
-  canShoot: 0
   ready: 0
   playerTower: {fileID: 1909430863}
   alienFleet: {fileID: 897832644}
   lookSpeed: 150
   moveSpeed: 75
+  crosshairImage: {fileID: 2800000, guid: 5c56df51827636945b6422d17e73a4eb, type: 3}
+--- !u!114 &166941906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166941901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb39cf5809119c40abc5d95e9cae37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotPrefab: {fileID: 6847990033936277438, guid: 74998b34dd6eeae4386cd0beec424b1e, type: 3}
+  canShoot: 0
 --- !u!1 &367311445
 GameObject:
   m_ObjectHideFlags: 0
