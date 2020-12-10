@@ -179,7 +179,16 @@ public class PlayerBuilder : MonoBehaviour
             Move(move * moveSpeed * Time.deltaTime);
             Rotate(rotate * rotateSpeed * Time.deltaTime);
 
-
+            // slowly turn tower to match camera
+            //Vector3 direction = mainCamera.transform.rotation - transform.rotation;
+            //Quaternion rotateTo = Quaternion.LookRotation(direction);
+            
+            Quaternion targetOrientation = mainCamera.transform.rotation;
+            targetOrientation.x = 0.0f;
+            targetOrientation.z = 0.0f;
+            
+            if (rotate == 0.0f)
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetOrientation, rotateSpeed / 2 * Time.deltaTime);
         }
     }
 }
