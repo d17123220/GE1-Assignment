@@ -17,11 +17,6 @@ public class ShotFlight : MonoBehaviour
         {
             collision.gameObject.transform.parent.gameObject.GetComponent<SaucerExplode>().RandomExplode();
         }
-
-
-        
-        
-
     }
 
     // Start is called before the first frame update

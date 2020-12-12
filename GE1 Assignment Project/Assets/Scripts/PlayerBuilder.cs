@@ -143,8 +143,22 @@ public class PlayerBuilder : MonoBehaviour
     // move whole tower forward or backward
     private void Move(float units)
     {
-        // take tower's current position, and move forward or backward based on current rotation
-        transform.position += transform.forward * units;
+        // take tower's current position, and move forward or backward based on camera's current rotation
+        Vector3 moveDirection  = mainCamera.transform.forward;
+        moveDirection.y = 0.0f;
+        moveDirection.Normalize();
+        transform.position += moveDirection * units;
+        // drag camera to the same point
+        mainCamera.transform.position = transform.position;
+    }
+
+    private void Strafe(float units)
+    {
+        // take tower's current position, and move right or left based on camera's current rotation
+        Vector3 moveDirection  = mainCamera.transform.right;
+        moveDirection.y = 0.0f;
+        moveDirection.Normalize();
+        transform.position += moveDirection * units;
         // drag camera to the same point
         mainCamera.transform.position = transform.position;
     }
@@ -177,7 +191,8 @@ public class PlayerBuilder : MonoBehaviour
             rotate = Input.GetAxis("Horizontal");
 
             Move(move * moveSpeed * Time.deltaTime);
-            Rotate(rotate * rotateSpeed * Time.deltaTime);
+            //Rotate(rotate * rotateSpeed * Time.deltaTime);
+            Strafe(rotate * moveSpeed * Time.deltaTime);
 
             // slowly turn tower to match camera
             //Vector3 direction = mainCamera.transform.rotation - transform.rotation;

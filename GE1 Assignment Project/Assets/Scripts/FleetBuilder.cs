@@ -29,6 +29,9 @@ public class FleetBuilder : MonoBehaviour
     // define initial movement speed in bricks per second
     public float moveSpeed = 3;
     public bool ready = false;
+    public bool destroyed = false;
+    private float xDirection = 1.0f;
+    private bool collisionNotification = false;
     
     // define fleet dimentions
     public int fleetWidth = 5;
@@ -44,7 +47,7 @@ public class FleetBuilder : MonoBehaviour
     {
         // vertical coordinate Y
         float fullY = fleetHeight.Length;
-        float Y = (float) ((-1) * fullY + i) * saucerHeight + ((-1) * (fullY-1) +i ) * verticalSpacer;
+        float Y = (float) ((-1) * fullY + i) * saucerHeight + ((-1) * (fullY-1) +i + 0.5f) * verticalSpacer;
         
         // forward coordinate Z
         float halfZ = fleetDepth / 2;
@@ -59,7 +62,7 @@ public class FleetBuilder : MonoBehaviour
         return new Vector3(X,Y,Z);
     }
 
-    // coroutine to build 
+    // coroutine to build fleet
     System.Collections.IEnumerator BuildFleet()
     {
         // Build level by level
@@ -121,17 +124,62 @@ public class FleetBuilder : MonoBehaviour
 
     }
 
+    // invert movement using random delay becasue multiple blocks can signal that wall collision detected
+    public void RandomCollisionNotification()
+    {
+        float delay = Random.Range(0.001f, 0.005f);
+        Invoke("CollisionNotification",delay);
+    }
 
+    public void CollisionNotification()
+    {
+        // if already notified - do nothing
+        if (collisionNotification)
+            return;
+
+        collisionNotification = true;
+        // collision happened when moved by X coordinate
+        xDirection *= -1;
+
+        // move one size down each saucer
+        foreach (Transform child in transform)
+        {
+            child.gameObject.GetComponent<SaucerMove>().MoveDown(saucerHeight, transform.position[1]);
+        }
+    }
+
+    // coroutine to move fleet
+    System.Collections.IEnumerator MoveFleet()
+    {
+        // if fleet is not ready - do nothing
+        while (!ready)
+            yield return null;
+        
+        // if player is not yet in the tower - do nothing
+        while (!mainCamera.GetComponent<CameraBind>().isInTower)
+            yield return null;
+
+        while (!destroyed)
+        {
+            float delay = 0.2f;
+            yield return new WaitForSeconds(delay);
+            collisionNotification = false;
+            transform.Translate(xDirection * moveSpeed, 0.0f, 0.0f);
+        }
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
         // before start alien fleet, choose rotation as random angle around Y axis
-        //transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-100,101), 0, Random.Range(-100,101)), transform.up);
+        transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-100,101), 0, Random.Range(-100,101)), transform.up);
 
         // generate fleet using co-routine
         StartCoroutine(BuildFleet());
+
+        // move fleet using co-routine
+        StartCoroutine(MoveFleet());
 
     }
 

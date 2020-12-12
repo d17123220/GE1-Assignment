@@ -41,7 +41,7 @@ public class SaucerExplode : MonoBehaviour
                 // remove collision box
                 child.GetComponent<Collider>().enabled = false;
                 // add rigid body
-                var rb = child.gameObject.AddComponent<Rigidbody>();
+                var rb = child.gameObject.GetComponent<Rigidbody>();
                 rb.useGravity = true;
                 rb.mass = 5.0f;
                 rb.AddForce(Physics.gravity * rb.mass * rb.mass * 100);
