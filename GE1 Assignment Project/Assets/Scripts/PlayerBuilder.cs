@@ -140,27 +140,68 @@ public class PlayerBuilder : MonoBehaviour
         ready = true;
     }
 
-    // move whole tower forward or backward
-    private void Move(float units)
+    private Vector3 MovementWithinCageBoundary(Vector3 currentPosition, Vector3 moveVector)
     {
-        // take tower's current position, and move forward or backward based on camera's current rotation
-        Vector3 moveDirection  = mainCamera.transform.forward;
-        moveDirection.y = 0.0f;
-        moveDirection.Normalize();
-        transform.position += moveDirection * units;
-        // drag camera to the same point
-        mainCamera.transform.position = transform.position;
+        Vector3 newPosition, finalMove;
+        // check if it flew outside of the box
+        GameObject cage = GameObject.Find("/Cage");
+        // get half depth of the prefab
+        float halfTowerBody = blueprint.GetLength(1) / 2 * prefabsize;
+
+        Vector3 allowedMove = currentPosition;
+        Vector3 xMovement = moveVector;
+        xMovement.z = 0.0f;
+        Vector3 zMovement = moveVector;
+        zMovement.x = 0.0f;
+
+        // initialize what is allowed
+        finalMove = new Vector3(0.0f, 0.0f, 0.0f);
+
+        // check if new position by X is still within boundaries
+        newPosition = allowedMove + xMovement;
+        if (newPosition.x - halfTowerBody >= -cage.transform.localScale.x / 2 && newPosition.x + halfTowerBody <= cage.transform.localScale.x / 2)
+        {
+            finalMove += xMovement;
+        }
+ 
+        // check if new position by Z is still within boundaries
+        newPosition = allowedMove + zMovement;
+        if (newPosition.z - halfTowerBody >= -cage.transform.localScale.z / 2 && newPosition.z + halfTowerBody <= cage.transform.localScale.z /2 )
+        {    
+            finalMove += zMovement;
+        }
+
+        allowedMove += finalMove;
+
+        return allowedMove;
     }
 
-    private void Strafe(float units)
+    // move whole tower forward or backward
+    private void Move(float units, int direction)
     {
-        // take tower's current position, and move right or left based on camera's current rotation
-        Vector3 moveDirection  = mainCamera.transform.right;
+        // no move - don't waste time
+        if (units == 0.0f)
+            return;
+        
+        Vector3 moveDirection;   
+        // take tower's current position, and move left-right or forward-backward based on camera's current rotation
+        if (direction  == 0)
+            moveDirection  = mainCamera.transform.right;
+        else if (direction == 2)
+            moveDirection  = mainCamera.transform.forward;
+        else
+            // do notyhing, as wrong coordinate
+            return;
+
         moveDirection.y = 0.0f;
         moveDirection.Normalize();
-        transform.position += moveDirection * units;
+        // get allowed movement which is still within cage boundary
+        Vector3 newPosition = MovementWithinCageBoundary(transform.position, moveDirection * units);
+        
+        // move to this new positions
+        transform.position = newPosition;
         // drag camera to the same point
-        mainCamera.transform.position = transform.position;
+        mainCamera.transform.position = newPosition;
     }
 
     // rotate whole tower around vertical axis
@@ -186,13 +227,12 @@ public class PlayerBuilder : MonoBehaviour
         // use controls to move tower around - only if playr is in tower
         if (mainCamera.GetComponent<CameraBind>().isInTower)
         {
-            float move, rotate;
+            float move, strafe;
             move = Input.GetAxis("Vertical");
-            rotate = Input.GetAxis("Horizontal");
+            strafe = Input.GetAxis("Horizontal");
 
-            Move(move * moveSpeed * Time.deltaTime);
-            //Rotate(rotate * rotateSpeed * Time.deltaTime);
-            Strafe(rotate * moveSpeed * Time.deltaTime);
+            Move(move * moveSpeed * Time.deltaTime, 2);
+            Move(strafe * moveSpeed * Time.deltaTime, 0);
 
             // slowly turn tower to match camera
             //Vector3 direction = mainCamera.transform.rotation - transform.rotation;
@@ -202,8 +242,7 @@ public class PlayerBuilder : MonoBehaviour
             targetOrientation.x = 0.0f;
             targetOrientation.z = 0.0f;
             
-            if (rotate == 0.0f)
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetOrientation, rotateSpeed / 2 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetOrientation, rotateSpeed / 2 * Time.deltaTime);
         }
     }
 }

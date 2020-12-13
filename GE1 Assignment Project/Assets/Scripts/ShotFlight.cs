@@ -33,12 +33,12 @@ public class ShotFlight : MonoBehaviour
 
         // check if it flew outside of the box
         GameObject cage = GameObject.Find("/Cage");
-        if (transform.position[1] > cage.transform.localScale[1] ||
-            transform.position[1] < 0 ||
-            transform.position[0] < -cage.transform.localScale[0] / 2 ||
-            transform.position[0] > cage.transform.localScale[0] / 2 ||
-            transform.position[2] < -cage.transform.localScale[2] / 2 ||
-            transform.position[2] > cage.transform.localScale[2] /2 )
+        if (transform.position.y > cage.transform.localScale.y ||
+            transform.position.y < 0 ||
+            transform.position.x < -cage.transform.localScale.x / 2 ||
+            transform.position.x > cage.transform.localScale.x / 2 ||
+            transform.position.z < -cage.transform.localScale.z / 2 ||
+            transform.position.z > cage.transform.localScale.z /2 )
         {
             Destroy(gameObject);
         }
