@@ -28,6 +28,8 @@ public class FleetBuilder : MonoBehaviour
 
     // define initial movement speed in bricks per second
     public float moveSpeed = 3;
+    public float maxStepDelay = 1.0f;
+    public float minStepDelay = 0.1f;
     public bool ready = false;
     public bool destroyed = false;
     private float xDirection = 1.0f;
@@ -144,9 +146,50 @@ public class FleetBuilder : MonoBehaviour
         // move one size down each saucer
         foreach (Transform child in transform)
         {
-            child.gameObject.GetComponent<SaucerMove>().MoveDown(saucerHeight, transform.position[1]);
+            child.gameObject.GetComponent<SaucerMove>().MoveDown(saucerHeight, transform.position.y);
         }
     }
+
+    private float GetSaucerDistances()
+    {
+        float minX = 100.0f;
+        float maxX = -100.0f;
+        float minZ = 100.0f;
+        float maxZ = -100.0f;
+        float minY = 100.0f;
+        float maxY = -100.0f;
+
+        // parse each child and find min and max value in each coordinate
+        foreach (Transform child in transform)
+        {
+            if (child.localPosition.x < minX)
+                minX = child.localPosition.x;
+            if (child.localPosition.x > maxX)
+                maxX = child.localPosition.x;
+            if (child.localPosition.y < minY)
+                minY = child.localPosition.y;
+            if (child.localPosition.y > maxY)
+                maxY = child.localPosition.y;
+            if (child.localPosition.z < minZ)
+                minZ = child.localPosition.z;
+            if (child.localPosition.z > maxZ)
+                maxZ = child.localPosition.z;
+        }
+        
+        // get difference by each coordinate
+        float dx = (float) System.Math.Round(maxX,1) - (float) System.Math.Round(minX,1);
+        float dy = (float) System.Math.Round(maxY,1) - (float) System.Math.Round(minY,1);
+        float dz = (float) System.Math.Round(maxZ,1) - (float) System.Math.Round(minZ,1);
+        
+        // calculate ratio of tempo, or ratio for pauses inbetween steps. from 0.0f to 1.0f
+        // 0.0f - only 1 saucer left
+        // 1.0f - all saucers are inact
+        // inbetween - some out-most columns or rows or depths are shredded
+        float inBetweenSteps = ( dx/(saucerWidth + horizontalSpacer) + dy/(saucerHeight + verticalSpacer) + dz/(saucerDepth + depthSpacer) ) / (fleetWidth - 1 + fleetDepth - 1 + fleetHeight.Length - 1);
+    
+        return inBetweenSteps;
+    }
+
 
     // coroutine to move fleet
     System.Collections.IEnumerator MoveFleet()
@@ -161,7 +204,9 @@ public class FleetBuilder : MonoBehaviour
 
         while (!destroyed)
         {
-            float delay = 0.2f;
+            float delay = GetSaucerDistances();
+            // with delay scale from 0.0f to 1.0f, this will scale from minDelay to minDelay maxDelay
+            delay = minStepDelay + (maxStepDelay-minStepDelay) * delay;
             yield return new WaitForSeconds(delay);
             collisionNotification = false;
             transform.Translate(xDirection * moveSpeed, 0.0f, 0.0f);
@@ -186,7 +231,12 @@ public class FleetBuilder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // move fleet
+        // if no children saucers left - then whole fleet is destroyed
+        if (transform.childCount < 1)
+        {
+            destroyed = true;
+            Destroy(gameObject, 1.5f);
+        }
         
     }
 }
