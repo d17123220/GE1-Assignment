@@ -26,8 +26,10 @@ public class PlayerShooting : MonoBehaviour
             // check if there is no shot exist
             if (GameObject.Find("/Shot(Clone)") == null)
             {
-                // set spawning point 5 units away from camera
-                Vector3 spawnPoint = transform.position + 5 * transform.forward;
+                // set spawning point 1 units away from camera
+                Vector3 forward = transform.forward;
+                forward.Normalize();
+                Vector3 spawnPoint = transform.position + transform.forward;
                 
                 // spawn shot
                 GameObject shot = GameObject.Instantiate<GameObject>(shotPrefab);

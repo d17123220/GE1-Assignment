@@ -210,9 +210,64 @@ public class FleetBuilder : MonoBehaviour
             yield return new WaitForSeconds(delay);
             collisionNotification = false;
             transform.Translate(xDirection * moveSpeed, 0.0f, 0.0f);
+
+            // take a chance to shoot at player's tower
+            ShootPlayer();
+
         }
     }
 
+    // take a chance to shoot at the player.
+    // only bottom-most saucer of the pillar (by X,Z coordinates) can shoot
+    // chance for saucer to shoot after each step is 100% / number of saucers alive / 2
+    private void ShootPlayer()
+    {
+        Dictionary<float, Dictionary<float, float>> pillars = new Dictionary<float, Dictionary<float, float>>();
+        float shootChance = 100.0f / 2 / gameObject.transform.childCount;
+        float randomChance;
+        float x, y, z;
+
+        // check all children
+        foreach (Transform child in transform)
+        {
+            // get an X,Z pair of each pillar
+            x = (float) System.Math.Round(child.transform.localPosition.x,1);
+            y = (float) System.Math.Round(child.transform.localPosition.y,1);
+            z = (float) System.Math.Round(child.transform.localPosition.z,1);
+
+            // for each pillar find bottom saucer (easy, as it is generated from bottom so first suitable by coordinates will do)
+            if (!pillars.ContainsKey(x))
+            {
+                pillars.Add(x, new Dictionary<float, float>());
+            }
+            if (!pillars[x].ContainsKey(z))
+            {
+                pillars[x].Add(z, 0.0f);
+            }
+            if (pillars[x][z] > y)
+            {
+                pillars[x][z] = y;
+            }
+        }
+
+        foreach (Transform child in transform)
+        {
+            // get an X,Z pair of each pillar
+            x = (float) System.Math.Round(child.transform.localPosition.x,1);
+            y = (float) System.Math.Round(child.transform.localPosition.y,1);
+            z = (float) System.Math.Round(child.transform.localPosition.z,1);
+
+            if (pillars[x][z] == y)
+            {
+                // for each pillar calculate chance and if it is actually shooting
+                randomChance = Random.Range(0.0f, 100.0f);
+                if (randomChance < shootChance)
+                {
+                    child.gameObject.GetComponent<SaucerShooting>().Shoot();
+                }
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

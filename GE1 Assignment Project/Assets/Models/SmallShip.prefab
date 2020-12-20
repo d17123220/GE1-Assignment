@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2465133002830162871}
   - component: {fileID: 7912342609520214707}
   - component: {fileID: 5800312873333027647}
+  - component: {fileID: 1951781978040339894}
   m_Layer: 0
   m_Name: SmallShip
   m_TagString: Untagged
@@ -74,3 +75,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 25
+  isDestroyed: 0
+--- !u!114 &1951781978040339894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987613861188449458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05909884a4754e54aa59d01a532cfd3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotPrefab: {fileID: 1134393750223104444, guid: d0a7ec0241c9fba4184e70da088d5958, type: 3}
+  prefabsize: 1
+  saucerheight: 8
+  target: {fileID: 0}

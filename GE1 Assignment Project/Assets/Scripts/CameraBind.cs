@@ -185,7 +185,7 @@ public class CameraBind : MonoBehaviour
         {
             // look around using mouse
             Yaw(mouseX * lookSpeed * Time.deltaTime);
-            Pitch(-mouseY * lookSpeed * Time.deltaTime, -10.0f);
+            Pitch(-mouseY * lookSpeed * Time.deltaTime, 0.0f);
 
         }
     }

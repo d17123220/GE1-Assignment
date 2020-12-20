@@ -2,34 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotFlight : MonoBehaviour
+public class ShotFlightAlien : MonoBehaviour
 {
-    public float bulletSpeed = 100.0f;
+    public float bulletSpeed = 25.0f;
     
     // get collision with other objects
     public void OnCollisionEnter(Collision collision)
     {
-        // destroy this shot if it was not player's tower itself
-        if  (!collision.gameObject.name.Contains("DefenderCube"))
-            Destroy(gameObject);
 
-        // if collided with saucer
-        if (collision.gameObject.name.Contains("AlienCube"))
+
+        // if collided with player's tower
+        if (collision.gameObject.name.Contains("DefenderCube"))
         {
-            collision.gameObject.transform.parent.gameObject.GetComponent<SaucerExplode>().RandomExplode();
-        }
-        
-        // if collided with alien shot
-        if (collision.gameObject.name.Contains("AlienShot"))
-        {
-            Destroy(collision.gameObject);
+            // destroy this shot
+            Destroy(gameObject);
+            collision.gameObject.transform.parent.gameObject.GetComponent<PlayerExplode>().RandomExplode();
         }
     }
+
 
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(this.gameObject, 10);
+         //Destroy(this.gameObject, 30);
     }
 
     // Update is called once per frame
@@ -48,6 +43,6 @@ public class ShotFlight : MonoBehaviour
             transform.position.z > cage.transform.localScale.z /2 )
         {
             Destroy(gameObject);
-        }
+        }       
     }
 }

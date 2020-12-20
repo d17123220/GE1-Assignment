@@ -2,10 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/*
+    Explode object:
+    - make a random acceleration and direction of all child parts
+    - remove child's collision box
+    - add to child rigidbody
+    - remove self from game objects
+*/
 public class PlayerExplode : MonoBehaviour
 {
-
     public float maxVelocity = 50.0f;
+    public bool isDestroyed = false;
+
+    // use randomized delay because bullet can trigger multiple blocks to try to explode
+    // use delay to set flag that it was destroyed correctly and ignore all additional triggers
+    public void RandomExplode()
+    {
+        float delay = Random.Range(0.01f, 0.5f);
+        Invoke("BeginExplode",delay);
+    }
+
+    // add synematic camera jump
+    public void BeginExplode()
+    {
+        Explode();
+    }
 
     public void Explode()
     {

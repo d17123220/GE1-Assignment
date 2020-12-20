@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 221161087929208874}
   - component: {fileID: 803337342529555776}
   - component: {fileID: 33674982882191493}
+  - component: {fileID: 7918327884393161477}
   m_Layer: 0
   m_Name: BigShip
   m_TagString: Untagged
@@ -88,3 +89,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f9a33f73ab89848b823d0f9a79000a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7918327884393161477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456768708279859948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05909884a4754e54aa59d01a532cfd3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotPrefab: {fileID: 1134393750223104444, guid: d0a7ec0241c9fba4184e70da088d5958, type: 3}
+  prefabsize: 1
+  saucerheight: 8
+  target: {fileID: 0}
