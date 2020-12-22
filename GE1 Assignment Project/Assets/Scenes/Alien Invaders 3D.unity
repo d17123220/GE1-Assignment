@@ -677,8 +677,8 @@ MonoBehaviour:
   minStepDelay: 0.1
   ready: 0
   destroyed: 0
-  fleetWidth: 3
-  fleetDepth: 1
+  fleetWidth: 11
+  fleetDepth: 5
   mainCamera: {fileID: 166941901}
   fleetHeight: 0200000002000000010000000100000000000000
 --- !u!1 &953545602
