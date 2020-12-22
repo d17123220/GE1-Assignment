@@ -101,7 +101,7 @@ public class PlayerBuilder : MonoBehaviour
     System.Collections.IEnumerator BuildTower()
     {
         // wait initially 2 seconds
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(0.5f);
         
         // create player's tower based on blueprint
         // each cube is size one on all edges, and everything is built below point of script
@@ -133,8 +133,8 @@ public class PlayerBuilder : MonoBehaviour
             }
         }
 
-        // wait for additional second after building tower
-        yield return new WaitForSeconds(1);
+        // wait for additional seconds after building tower
+        yield return new WaitForSeconds(2);
 
         // Move camera to the top of the tank
         ready = true;

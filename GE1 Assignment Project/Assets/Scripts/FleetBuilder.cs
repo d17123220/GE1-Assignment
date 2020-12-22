@@ -202,7 +202,7 @@ public class FleetBuilder : MonoBehaviour
         while (!mainCamera.GetComponent<CameraBind>().isInTower)
             yield return null;
 
-        while (!destroyed)
+        while (!destroyed && mainCamera.GetComponent<CameraBind>().isInTower)
         {
             float delay = GetSaucerDistances();
             // with delay scale from 0.0f to 1.0f, this will scale from minDelay to minDelay maxDelay

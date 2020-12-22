@@ -6,6 +6,7 @@ public class CameraBind : MonoBehaviour
 {
     // Define state for player
     public bool isInCinematicMove = false;
+    public bool isInExplosionMove = false;
     public bool isInFreeMove = true;
     public bool isInTower = false;
     public bool ready = false;
@@ -13,6 +14,7 @@ public class CameraBind : MonoBehaviour
     // define points to look at
     public GameObject playerTower;
     public GameObject alienFleet;
+    public Vector3 explosionScenery;
 
     // define speed for movement
     public float lookSpeed = 150.0f;
@@ -29,6 +31,15 @@ public class CameraBind : MonoBehaviour
             isInFreeMove = false;
             isInCinematicMove = true;
         }
+    }
+
+    public void MoveFromExplosion(Vector3 destination)
+    {
+        isInExplosionMove = true;
+        isInTower = false;
+        ready = false;
+        explosionScenery = destination;
+        gameObject.GetComponent<PlayerShooting>().canShoot = false;
     }
 
     // move camera forward or backward (without rotation)
@@ -114,6 +125,31 @@ public class CameraBind : MonoBehaviour
             Application.Quit();
         }
 
+        // If moving to explosion place
+        if (isInExplosionMove)
+        {
+            // calculate if looking straight at target
+            Vector3 direction = playerTower.transform.position - transform.position;
+            
+            if (! (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f) )  
+            {
+                Quaternion rotateTo = Quaternion.LookRotation(direction);
+                // slowly look at target
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotateTo, lookSpeed / 60 * Time.deltaTime);
+            }
+
+            // move to explosionScenery
+            transform.position = Vector3.Lerp(transform.position, explosionScenery, moveSpeed / 30 * Time.deltaTime);
+            var distance = Vector3.Distance(transform.position,explosionScenery);
+
+            if (distance < 0.08f)
+            {
+                // finally explode player's tower 
+                playerTower.gameObject.GetComponent<PlayerExplode>().readyForExplosion = true;
+                isInExplosionMove = false;
+            }
+        }
+
         // if moving to player's tower
         if (isInCinematicMove)
         {
@@ -176,7 +212,7 @@ public class CameraBind : MonoBehaviour
                 flyDirection = -1;
             Climb(flyDirection * moveSpeed * Time.deltaTime);
 
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space) && !playerTower.gameObject.GetComponent<PlayerBuilder>().destroyed)
                 MoveToTower();
 
         }

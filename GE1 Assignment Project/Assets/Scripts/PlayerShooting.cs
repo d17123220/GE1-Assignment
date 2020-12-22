@@ -40,5 +40,11 @@ public class PlayerShooting : MonoBehaviour
                 shot.transform.Rotate(Vector3.right, 90.0f);
             }
         }
+
+        // Self destruction!
+        if (Input.GetKey(KeyCode.Q) && canShoot)
+        {
+            GameObject.Find("PlayerTower").gameObject.GetComponent<PlayerExplode>().RandomExplode();
+        }
     }
 }
