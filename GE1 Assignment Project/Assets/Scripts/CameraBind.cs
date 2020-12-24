@@ -154,10 +154,11 @@ public class CameraBind : MonoBehaviour
         if (isInCinematicMove)
         {
             Transform moveTo = playerTower.transform;
+            Vector3 moveToVector = moveTo.position + new Vector3(0.0f, 1.5f, 0.0f);
             Transform lookAt;
 
             // check where to look
-            var distance = Vector3.Distance(transform.position,moveTo.position);
+            var distance = Vector3.Distance(transform.position,moveToVector);
             if (distance > 0.8)
             {
                 lookAt = moveTo;
@@ -190,7 +191,7 @@ public class CameraBind : MonoBehaviour
                 // slowly look at target
                 transform.rotation = Quaternion.Lerp(transform.rotation, rotateTo, lookSpeed / 30 * Time.deltaTime);
                 // show cinematic LEARP from one point to another
-                transform.position = Vector3.Lerp(transform.position, moveTo.position, moveSpeed / 30 * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, moveToVector, moveSpeed / 30 * Time.deltaTime);
             }
         }
         // otherwise either free move or tower management
